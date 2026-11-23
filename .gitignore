@@ -1,0 +1,9 @@
+trainplan.db
+trainplan.db.*
+trainplan.key
+__pycache__/
+*.pyc
+.pytest_cache/
+.vscode/
+.venv/
+venv/

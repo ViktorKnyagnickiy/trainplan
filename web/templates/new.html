@@ -1,0 +1,24 @@
+{% extends 'base.html' %}{% block title %}Новий план{% endblock %}
+{% block body %}
+<div class="titlebar"><div><div class="crumb"><a href="{{ url_for('index') }}">Мої плани</a> / Новий план</div><h1>Новий тижневий план</h1></div></div>
+<form method="post" action="{{ url_for('create_plan') }}">
+<div class="steps">
+<section class="card step"><h2><span class="n">1</span>Профіль</h2>
+ <label class="f" for="nm">Назва плану</label><input id="nm" name="name" placeholder="наприклад, «Зал, 3 дні»">
+ <div class="row2"><div><label class="f" for="goal">Ціль</label><select id="goal" name="goal">{% for g in goals %}<option>{{ g }}</option>{% endfor %}</select></div>
+ <div><label class="f" for="lvl">Рівень підготовленості</label><select id="lvl" name="level"><option value="1">початковий</option><option value="2" selected>середній</option><option value="3">високий</option></select></div></div>
+ <label class="f" for="tmax">Тривалість заняття, хв</label><input id="tmax" type="number" name="tmax" value="60" min="30" max="150" step="5">
+ <label class="f">Тренувальні дні</label><div class="toggles">{% for d, n in DAY_NAMES.items() %}
+  <label class="toggle"><input type="checkbox" name="days" value="{{ d }}" {% if d in (1,3,5) %}checked{% endif %}><span>{{ n }}</span></label>{% endfor %}</div>
+ <label class="f">Доступне обладнання</label><div class="toggles">{% for q in equipment %}
+  <label class="toggle"><input type="checkbox" name="equipment" value="{{ q }}" {% if q in ('гантелі','лава') %}checked{% endif %}><span>{{ q }}</span></label>{% endfor %}</div>
+</section>
+<section class="card step"><h2><span class="n">2</span>Скринінг готовності</h2><div class="muted small" style="margin-bottom:6px">За структурою опитувальника PAR-Q+</div>
+ {% for q in questions %}<div class="q"><span>{{ q }}</span><div class="yn">
+  <label class="toggle"><input type="radio" name="q{{ loop.index0 }}" value="ні" checked><span>ні</span></label>
+  <label class="toggle"><input type="radio" name="q{{ loop.index0 }}" value="так"><span>так</span></label></div></div>{% endfor %}
+ <label class="f">Локальні обмеження</label><div class="toggles">{% for t, txt in local.items() %}
+  <label class="toggle"><input type="checkbox" name="local" value="{{ t }}"><span>{{ txt }}</span></label>{% endfor %}</div>
+ <button type="submit" class="wide submit">Сформувати план</button>
+</section></div></form>
+{% endblock %}

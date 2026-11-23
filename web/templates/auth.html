@@ -1,0 +1,24 @@
+{% extends 'base.html' %}{% block title %}{{ 'Реєстрація' if mode == 'register' else 'Вхід' }}{% endblock %}
+{% block page %}<div class="login">
+<section class="hero">
+ <div class="big">Персональний план тренувань за секунду</div>
+ <p>Система підбирає вправи під вашу ціль, обладнання та обмеження і після кожного заняття коригує навантаження за вашими відчуттями.</p>
+ <ul><li><span class="tick">✓</span>Жодна вправа не суперечить вашим протипоказанням</li>
+ <li><span class="tick">✓</span>Обсяг і частота за рекомендаціями ACSM</li>
+ <li><span class="tick">✓</span>Вага на наступне заняття розраховується автоматично</li></ul>
+</section>
+<div class="formwrap"><div class="card formcard">
+ <h2>{{ 'Реєстрація' if mode == 'register' else 'Вхід' }}</h2>
+ <div class="muted">{{ 'Пошта не потрібна — лише логін і пароль' if mode == 'register' else 'Увійдіть, щоб побачити свої плани' }}</div>
+ {% if error %}<p class="error">{{ error }}</p>{% endif %}
+ <form method="post">
+  <label class="f" for="login">Логін</label><input id="login" name="login" required autocomplete="username" value="{{ request.form.get('login', '') }}">
+  <label class="f" for="pw">Пароль</label><input id="pw" type="password" name="password" required autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}">
+  {% if mode == 'register' %}<label class="f" for="pw2">Повторіть пароль</label><input id="pw2" type="password" name="password2" required autocomplete="new-password">{% endif %}
+  <div style="height:20px"></div><button type="submit" class="wide">{{ 'Зареєструватися' if mode == 'register' else 'Увійти' }}</button>
+ </form>
+ {% if demo_enabled %}<div class="or">або</div>
+ <form method="post" action="{{ url_for('demo') }}"><button type="submit" class="ghost wide">Демо-режим без реєстрації</button></form>
+ <p class="muted small" style="text-align:center;margin:8px 0 0">Готовий план та історія тренувань; дані відновлюються під час кожного входу.</p>{% endif %}
+ <p class="muted small" style="text-align:center;margin:18px 0 0">{% if mode == 'register' %}Уже маєте акаунт? <a href="{{ url_for('login') }}"><b>Увійти</b></a>{% else %}Немає акаунта? <a href="{{ url_for('register') }}"><b>Зареєструватися</b></a>{% endif %}</p>
+</div></div></div>{% endblock %}

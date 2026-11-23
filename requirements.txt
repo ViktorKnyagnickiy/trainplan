@@ -1,0 +1,7 @@
+flask>=3.0
+scipy>=1.9
+numpy
+pandas
+matplotlib
+pytest
+# необов'язково: ortools

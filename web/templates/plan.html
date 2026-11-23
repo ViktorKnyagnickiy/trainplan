@@ -1,0 +1,20 @@
+{% extends 'base.html' %}{% block title %}План № {{ plan.id }}{% endblock %}
+{% block body %}
+<div class="titlebar"><div><div class="crumb"><a href="{{ url_for('index') }}">Мої плани</a> / План № {{ plan.id }}</div>
+<h1>{{ prof.name or 'Тижневий план' }}{% if prof.name %} · тижневий план{% endif %}</h1></div>
+<div class="actions"><form method="post" action="{{ url_for('delete_plan', plan_id=plan.id) }}" class="inline" onsubmit="return confirm('Видалити план № {{ plan.id }} разом з журналом тренувань?');"><button class="danger">Видалити план</button></form>
+<a class="btn" href="{{ url_for('new_plan') }}">+ Новий план</a></div></div>
+<div class="chips"><span class="chip">Ціль: <b>{{ prof.goal }}</b></span><span class="chip">Рівень: <b>{{ prof.level }}</b></span><span class="chip">Дні: <b>{{ prof.days }}</b></span><span class="chip">Заняття: <b>{{ prof.tmax }}</b></span><span class="chip">Обладнання: {{ prof.equipment }}</span><span class="chip">Протипоказання: <b>{{ prof.contra }}</b></span></div>
+<div class="stats"><div class="card stat"><div class="v">{{ stats.n_ex }}</div><div class="k">вправ на тиждень</div></div>
+<div class="card stat"><div class="v">{{ stats.n_sets }}</div><div class="k">робочих підходів на тиждень</div></div>
+<div class="card stat"><div class="v">{{ stats.freq }}/{{ stats.n_groups }}</div><div class="k">груп м’язів ≥ 2 разів на тиждень</div></div>
+<div class="card stat"><div class="v">{{ '%.2f'|format(plan.runtime)|replace('.', ',') }} с</div><div class="k">час формування · {{ 'оптимум' if plan.status == 'optimal' else plan.status }}</div></div></div>
+<h2 style="margin-bottom:12px">Тижневий план</h2>
+<div class="days">{% for d, items in days.items() %}
+<div class="card day"><h3>{{ DAY_NAMES_FULL[d] }}<span>{{ items|length }} вправ · ≈{{ minutes[d] }} хв</span></h3>
+{% for it in items %}<a class="ex" href="{{ url_for('log', item_id=it.id) }}" title="Журнал вправи"><span class="num">{{ loop.index }}</span><span class="nm">{{ it.name }}</span>
+<span class="badges"><span class="badge">{{ it.sets }}×{{ it.reps_min }}–{{ it.reps_max }}</span><span class="badge">RIR {{ it.rir }}</span><span class="badge">{{ it.rest }} с</span></span>
+{% if it.load %}<span class="w">{{ it.load|num }} кг</span>{% else %}<span class="w cal">підбір</span>{% endif %}</a>{% endfor %}
+</div>{% endfor %}</div>
+<p class="muted small" style="margin-top:16px">Натисніть на вправу, щоб записати заняття й отримати навантаження на наступне. «Підбір» означає калібрувальний тиждень: оберіть вагу, з якою виконуєте нижню межу повторень із запасом 3–4.</p>
+{% endblock %}

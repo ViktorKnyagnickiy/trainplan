@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}TrainPlan{% endblock %} · TrainPlan</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='11' width='4' height='10' rx='1.5'/%3E%3Crect x='8' y='8' width='4' height='16' rx='1.5'/%3E%3Crect x='12' y='14.5' width='8' height='3' rx='1.5'/%3E%3Crect x='20' y='8' width='4' height='16' rx='1.5'/%3E%3Crect x='25' y='11' width='4' height='10' rx='1.5'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body>
+{% set ep = request.endpoint %}
+{% macro navlinks() %}{% if user %}<a href="{{ url_for('index') }}" class="{{ 'on' if ep in ('index', 'show_plan', 'log') }}">Мої плани</a><a href="{{ url_for('new_plan') }}" class="{{ 'on' if ep == 'new_plan' }}">Новий план</a>{% endif %}<a href="{{ url_for('exercises') }}" class="{{ 'on' if ep == 'exercises' }}">База вправ</a>{% endmacro %}
+<header>
+ <a class="brand" href="{{ url_for('index') }}"><svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true" fill="currentColor"><rect x="3" y="11" width="4" height="10" rx="1.5"/><rect x="8" y="8" width="4" height="16" rx="1.5"/><rect x="12" y="14.5" width="8" height="3" rx="1.5"/><rect x="20" y="8" width="4" height="16" rx="1.5"/><rect x="25" y="11" width="4" height="10" rx="1.5"/></svg>TrainPlan</a>
+ <nav>{{ navlinks() }}</nav><div class="sp"></div>
+ {% if user %}<div class="who">{% if demo_mode %}<span class="pill">Демо-режим</span>{% endif %}<span class="login-name">{{ user.login }}</span><span class="ava" title="{{ user.login }}">{{ user.login[:1] }}</span>
+ <form method="post" action="{{ url_for('logout') }}" class="inline"><button class="link">Вийти</button></form></div>
+ {% else %}<div class="who"><a class="btn ghost sm" href="{{ url_for('register') if ep != 'register' else url_for('login') }}">{{ 'Реєстрація' if ep != 'register' else 'Вхід' }}</a></div>{% endif %}
+</header>
+<div class="mnav">{{ navlinks() }}</div>
+{% block page %}<main>{% block body %}{% endblock %}</main>
+<footer>TrainPlan · розв’язувач {{ solver|upper }} · система не замінює консультацію лікаря чи тренера; план формується на основі рекомендацій ACSM.</footer>{% endblock %}
+</body></html>

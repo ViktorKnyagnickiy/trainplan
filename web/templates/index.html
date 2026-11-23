@@ -1,0 +1,15 @@
+{% extends 'base.html' %}{% block title %}Мої плани{% endblock %}
+{% block body %}
+<div class="titlebar"><div><div class="crumb">Вітаємо, {{ user.login }}</div><h1>Мої плани</h1></div>
+<div class="actions"><a class="btn" href="{{ url_for('new_plan') }}">+ Новий план</a></div></div>
+{% if plans %}<div class="plans">{% for p in plans %}
+<div class="card plan-card">
+ <div><div class="crumb" style="margin:0">План № {{ p.row.id }} · {{ p.row.created_at[:10]|short_date }}</div>
+ <h3><a href="{{ url_for('show_plan', plan_id=p.row.id) }}">{{ p.prof.name or ('План № %d' % p.row.id) }}</a></h3></div>
+ <div class="chips"><span class="chip"><b>{{ p.prof.goal|capitalize }}</b></span><span class="chip">рівень: {{ p.prof.level }}</span><span class="chip">{{ p.prof.days }}</span><span class="chip">{{ p.prof.tmax }}</span>
+ <span class="chip">протипоказання: {{ p.prof.contra }}</span></div>
+ <div class="foot"><a class="btn ghost sm" href="{{ url_for('show_plan', plan_id=p.row.id) }}">Відкрити</a>
+ <form method="post" action="{{ url_for('delete_plan', plan_id=p.row.id) }}" class="inline" onsubmit="return confirm('Видалити план № {{ p.row.id }} разом з журналом тренувань?');"><button class="link">Видалити</button></form></div>
+</div>{% endfor %}</div>
+{% else %}<div class="card empty"><h2>Планів ще немає</h2><p>Заповніть профіль, і система сформує тижневий план під вашу ціль та обладнання.</p><a class="btn" href="{{ url_for('new_plan') }}">Сформувати перший план</a></div>{% endif %}
+{% endblock %}

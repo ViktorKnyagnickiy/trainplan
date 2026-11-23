@@ -1,0 +1,8 @@
+{% extends 'base.html' %}{% block title %}База вправ{% endblock %}
+{% block body %}
+<div class="titlebar"><div><div class="crumb">Довідник</div><h1>База вправ <span class="muted" style="font-weight:500">· {{ rows|length }}</span></h1></div></div>
+<input class="search" type="search" placeholder="Пошук за назвою, обладнанням чи групою м’язів…" oninput="filterRows(this.value)" aria-label="Пошук вправ">
+<div class="table-wrap"><table id="ex"><tr><th>№</th><th>Назва</th><th>Патерн</th><th>Механіка</th><th>Обладнання</th><th>Рівень</th><th>Основна група</th><th>Допоміжні</th><th>Протипоказання</th></tr>
+{% for r in rows %}<tr><td class="muted">{{ r.id }}</td><td><b style="font-weight:500">{{ r.name }}</b></td><td>{{ r.pattern }}</td><td>{{ r.mechanic }}</td><td>{{ r.equipment|replace(';', ', ')|replace('власна_вага', 'власна вага') }}</td><td>{{ r.level }}</td><td>{{ groups[r.primary_group] }}</td><td class="muted">{{ r.secondary_groups|replace(';', ', ') or '—' }}</td><td>{{ r.contra|replace(';', ', ') or '—' }}</td></tr>{% endfor %}</table></div>
+<script>function filterRows(q){q=q.toLowerCase();document.querySelectorAll('#ex tr:not(:first-child)').forEach(function(tr){tr.style.display=tr.textContent.toLowerCase().indexOf(q)>-1?'':'none';});}</script>
+{% endblock %}
